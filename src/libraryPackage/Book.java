@@ -2,12 +2,12 @@ package libraryPackage;
 
 public class Book {
     private final int id;
-    private int isbn;
+    private final String isbn;
     private String title;
     private String author;
     private String publicationDate;
 
-    public Book(int _id, int _isbn, String _title, String _author, String _publicationDate) {
+    public Book(int _id, String _isbn, String _title, String _author, String _publicationDate) {
         this.id = _id;
         this.isbn = _isbn;
         this.title = _title;
@@ -19,7 +19,7 @@ public class Book {
         return this.id;
     }
 
-    public int gteIsbn() {
+    public String getIsbn() {
         return this.isbn;
     }
 
@@ -35,8 +35,8 @@ public class Book {
         return this.publicationDate;
     }
 
-    public boolean compare(Book book) {
-        return this.id == book.id && this.isbn == book.isbn;
+    public boolean compare(final Book book) {
+        return this.id == book.id && this.isbn.equals(book.isbn); //czy equals zrobic z id i isbn a compare ze wszystkim?
     }
 
     @Override
