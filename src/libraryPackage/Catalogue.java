@@ -1,51 +1,96 @@
 package libraryPackage;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Catalogue {
-    private Map<Integer, BookQuantity> books;
+    private Map<Integer, BookEntry> books;
 
     public Catalogue() {
         this.books = new HashMap<>();
     }
 
-    public void addBookFromString(String book) throws Exception {
+    public void addFromString(String book) throws Exception {
         try{
             final String[] bookInformation = book.split(", ");
-            final int id = Integer.parseInt(bookInformation[0]);
-            final String isbn = bookInformation[1];
-            final String title = bookInformation[2];
-            final String author = bookInformation[3];
-            final String publicationDate = bookInformation[4];
-            final int quantity = Integer.parseInt(bookInformation[5]);
+            if(bookInformation.length ==6)
+                this.addBookEntryFromString(bookInformation);
+            else if(bookInformation.length == 3)
+                this.addEditionFromString(bookInformation);
+            else if(bookInformation.length ==4)
+                this.addBookFromString(bookInformation);
+        } catch (MismatchBookIdException e) {
+            throw e;
+        } catch (Exception e) {
+            throw e; //bo throwuje te exceptiony z poszczegolnych funkcji, czy zrobic throw new exception("wrong information format") ?
+        }
+    }
 
-            this.addBook(new Book(id, isbn, title, author, publicationDate), quantity);
+    public Map<Integer, BookEntry> getAllIdAnBookQuantities() {
+        return this.books;
+    }
+
+    public BookEntry getBookEntryById(final int id) {
+        return this.books.get(id);
+    }
+
+    public Set<Edition> getEditionsById(final int id) {
+        return this.getBookEntryById(id).getEditions();
+    }
+
+    private void addBook(final Book book) {
+        if(!this.books.containsKey(book.getId()))
+            this.books.put(book.getId(), new BookEntry(book, new HashSet<>()));
+    }
+
+    private void addBookFromString(final String[] bookInfo) throws Exception {
+        try {
+            final int id = Integer.parseInt(bookInfo[0]);
+            final String title = bookInfo[1];
+            final String author = bookInfo[2];
+            final String originalPublicationDate = bookInfo[3];
+            this.addBook(new Book(id, title, author, originalPublicationDate));
         } catch (Exception e) {
             throw new Exception("Wrong information format");
         }
     }
 
-    public Map<Integer, BookQuantity> getAllIdAnBookQuantities() {
-        return this.books;
-    }
-
-    public BookQuantity getBookQuantityById(final int id) {
-        return this.books.get(id);
-    }
-
-    private void addBook(final Book book, final int quantity) throws MismatchBookIsbnException {
-        if(this.books.containsKey(book.getId())) {
-            if(this.getBookById(book.getId()).getIsbn().equals(book.getIsbn()))
-                this.books.get(book.getId()).addQuantity(quantity);
-            else
-                throw new MismatchBookIsbnException("cannot add, ISBN not the same");
+    private void addEdition(final int id, final String isbn, final String publicationDate) throws MismatchBookIdException {
+        if(this.books.containsKey(id)) {
+            Edition edition = new Edition(isbn, publicationDate);
+            if(!this.getEditionsById(id).contains(edition))
+                this.getEditionsById(id).add(edition);
         }
         else
-            this.books.put(book.getId(), new BookQuantity(book, quantity));
+            throw new MismatchBookIdException("Book with id " + id + " does not exist");
     }
 
-    private Book getBookById(final int id) {
-        return this.books.get(id).getBook();
+    private void addEditionFromString(final String[] editionInfo) throws Exception {
+        try {
+            final int id = Integer.parseInt(editionInfo[0]);
+            final String isbn = editionInfo[1];
+            final String publicationDate = editionInfo[2];
+            this.addEdition(id, isbn, publicationDate);
+        } catch (MismatchBookIdException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new Exception("Wrong information format");
+        }
     }
+
+    private void addBookEntryFromString(final String[] bookInfo) throws Exception {
+        try {
+            final int id = Integer.parseInt(bookInfo[0]);
+            final String title = bookInfo[1];
+            final String author = bookInfo[2];
+            final String originalPublicationDate = bookInfo[3];
+            final String isbn = bookInfo[4];
+            final String publicationDate = bookInfo[5];
+            if(!this.books.containsKey(id))
+                this.addBook(new Book(id, title, author, originalPublicationDate));
+            this.addEdition(id, isbn, publicationDate); //czy zrobic catch dla mismatchBookId? bo wiem ze nie przekaze do tego id ktorego nie ma to tu nigdy tego nie wywali?
+        } catch (Exception e) {
+            throw new Exception("Wrong information format");
+        }
+    }
+
 }

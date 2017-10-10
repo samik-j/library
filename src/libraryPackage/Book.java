@@ -2,25 +2,19 @@ package libraryPackage;
 
 public class Book {
     private final int id;
-    private final String isbn;
     private String title;
     private String author;
-    private String publicationDate;
+    private String originalPublicationDate;
 
-    public Book(int _id, String _isbn, String _title, String _author, String _publicationDate) {
+    public Book(int _id, String _title, String _author, String _originalPublicationDate) {
         this.id = _id;
-        this.isbn = _isbn;
         this.title = _title;
         this.author = _author;
-        this.publicationDate = _publicationDate;
+        this.originalPublicationDate = _originalPublicationDate;
     }
 
     public int getId() {
         return this.id;
-    }
-
-    public String getIsbn() {
-        return this.isbn;
     }
 
     public String getTitle() {
@@ -31,12 +25,13 @@ public class Book {
         return this.author;
     }
 
-    public String getPublicationDate() {
-        return this.publicationDate;
+    public String getOriginalPublicationDate() {
+        return this.originalPublicationDate;
     }
 
     public boolean compare(final Book book) {
-        return this.id == book.id && this.isbn.equals(book.isbn); //czy equals zrobic z id i isbn a compare ze wszystkim?
+        return this.id == book.id && this.title == book.title
+                && this.author == book.author && this.originalPublicationDate == book.originalPublicationDate;
     }
 
     @Override
@@ -56,6 +51,6 @@ public class Book {
 
     @Override
     public String toString() {
-        return  "" + this.id + ", " + this.isbn + ", " + this.title + ", " + this.author + ", " + this.publicationDate;
+        return  "" + this.id + ", " + this.title + ", " + this.author + ", " + this.originalPublicationDate;
     }
 }
