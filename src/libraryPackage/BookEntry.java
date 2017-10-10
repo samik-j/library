@@ -3,9 +3,9 @@ package libraryPackage;
 import java.util.Set;
 
 public class BookEntry {
-    private Book book;
-    private int quantity ;
-    private Set<Edition> editions;
+    private Book book; // final
+    private int quantity ; // not needed
+    private Set<Edition> editions; // final
 
     public BookEntry(Book _book, Set<Edition> _editions) { //czy editions nie powinno byc w konstruktorze?
         this.book = _book;
@@ -36,7 +36,7 @@ public class BookEntry {
 
         BookEntry bookEntry = (BookEntry) o;
 
-        return book != null ? book.equals(bookEntry.book) : bookEntry.book == null;
+        return book != null ? book.equals(bookEntry.book) : bookEntry.book == null; // chrck quantity
     }
 
 }

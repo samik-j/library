@@ -9,7 +9,7 @@ public class Catalogue {
         this.books = new HashMap<>();
     }
 
-    public void addFromString(String book) throws Exception {
+    public void addFromString(String book) throws Exception {// usunac to cale
         try{
             final String[] bookInformation = book.split(", ");
             if(bookInformation.length ==6)
@@ -18,7 +18,7 @@ public class Catalogue {
                 this.addEditionFromString(bookInformation);
             else if(bookInformation.length ==4)
                 this.addBookFromString(bookInformation);
-        } catch (MismatchBookIdException e) {
+        } catch (BookNotFoundException e) {
             throw e;
         } catch (Exception e) {
             throw e; //bo throwuje te exceptiony z poszczegolnych funkcji, czy zrobic throw new exception("wrong information format") ?
@@ -40,6 +40,7 @@ public class Catalogue {
     private void addBook(final Book book) {
         if(!this.books.containsKey(book.getId()))
             this.books.put(book.getId(), new BookEntry(book, new HashSet<>()));
+        //throw exception ze juz jest takie id
     }
 
     private void addBookFromString(final String[] bookInfo) throws Exception {
@@ -54,14 +55,15 @@ public class Catalogue {
         }
     }
 
-    private void addEdition(final int id, final String isbn, final String publicationDate) throws MismatchBookIdException {
+    private void addEdition(final int id, final String isbn, final String publicationDate) throws BookNotFoundException {
         if(this.books.containsKey(id)) {
             Edition edition = new Edition(isbn, publicationDate);
             if(!this.getEditionsById(id).contains(edition))
                 this.getEditionsById(id).add(edition);
+            //jak jest juz edycja to exception
         }
         else
-            throw new MismatchBookIdException("Book with id " + id + " does not exist");
+            throw new BookNotFoundException("Book with id " + id + " does not exist");
     }
 
     private void addEditionFromString(final String[] editionInfo) throws Exception {
@@ -70,7 +72,7 @@ public class Catalogue {
             final String isbn = editionInfo[1];
             final String publicationDate = editionInfo[2];
             this.addEdition(id, isbn, publicationDate);
-        } catch (MismatchBookIdException e) {
+        } catch (BookNotFoundException e) {
             throw e;
         } catch (Exception e) {
             throw new Exception("Wrong information format");
@@ -85,9 +87,11 @@ public class Catalogue {
             final String originalPublicationDate = bookInfo[3];
             final String isbn = bookInfo[4];
             final String publicationDate = bookInfo[5];
-            if(!this.books.containsKey(id))
-                this.addBook(new Book(id, title, author, originalPublicationDate));
-            this.addEdition(id, isbn, publicationDate); //czy zrobic catch dla mismatchBookId? bo wiem ze nie przekaze do tego id ktorego nie ma to tu nigdy tego nie wywali?
+
+            this.addBook(new Book(id, title, author, originalPublicationDate));
+            this.addEdition(id, isbn, publicationDate);
+        } catch (BookNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new Exception("Wrong information format");
         }

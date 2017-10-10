@@ -2,7 +2,7 @@ package libraryPackage;
 
 public class Edition {
     private final String isbn;
-    private String publicationDate;
+    private String publicationDate; // change name
     private int quantity;
 
     public Edition(String _isbn, String _publicationDate) {
@@ -11,7 +11,7 @@ public class Edition {
         this.publicationDate = _publicationDate;
     }
 
-    public void addQuantity(final int quantity) {
+    public void addQuantity(final int quantity) { // add remove :)
         this.quantity += quantity;
     }
 
@@ -22,6 +22,8 @@ public class Edition {
     public String getIsbn() {
         return this.isbn;
     }
+
+    // add compare and use it in tests
 
     @Override
     public boolean equals(Object o) {

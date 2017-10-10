@@ -35,6 +35,7 @@ class BookEntryTest {
         Set<Edition> editions = new HashSet<>();
         editions.add(edition1);
         BookEntry bookEntry = new BookEntry(new Book(1, "title", "author", "0000"), new HashSet<>(editions));
+        //assertnull
         assertEquals(null, bookEntry.getEditionByIsbn("124"));
     }
 
@@ -44,9 +45,9 @@ class BookEntryTest {
         Set<Edition> editions = new HashSet<>();
         editions.add(edition1);
         BookEntry bookEntry = new BookEntry(new Book(1, "title", "author", "0000"), new HashSet<>(editions));
-        Edition edition2 = new Edition("123", "0000");
+        Edition edition2 = new Edition("123", "2000");
         bookEntry.addEdition(edition2);
-        assertEquals(editions, bookEntry.getEditions());
+        assertEquals(editions, bookEntry.getEditions()); //tak czyt new HashSet<>(editions) czy inaczej??
     }
 
     @Test

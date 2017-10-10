@@ -4,7 +4,7 @@ public class Book {
     private final int id;
     private String title;
     private String author;
-    private String originalPublicationDate;
+    private String originalPublicationDate; // change name
 
     public Book(int _id, String _title, String _author, String _originalPublicationDate) {
         this.id = _id;
@@ -17,21 +17,9 @@ public class Book {
         return this.id;
     }
 
-    public String getTitle() {
-        return this.title;
-    }
-
-    public String getAuthor() {
-        return this.author;
-    }
-
-    public String getOriginalPublicationDate() {
-        return this.originalPublicationDate;
-    }
-
     public boolean compare(final Book book) {
-        return this.id == book.id && this.title == book.title
-                && this.author == book.author && this.originalPublicationDate == book.originalPublicationDate;
+        return this.id == book.id && this.title.equals(book.title)
+                && this.author.equals(book.author) && this.originalPublicationDate.equals(book.originalPublicationDate);
     }
 
     @Override
