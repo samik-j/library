@@ -20,7 +20,6 @@ class BookEntryTest {
         bookEntry.addEdition(edition1);
         assertEquals(editions, bookEntry.getEditions());
         assertTrue(edition1.compare(bookEntry.getEditionByIsbn("123")));
-        //czy zamiast tych dwoch linijek assertTrue(edition1.compare(bookEntry.getEditionByIsbn("123")) && bookEntry.getEditions.size() == 1);
     }
 
     @Test
@@ -54,7 +53,6 @@ class BookEntryTest {
         bookEntry.addEdition(edition2);
         assertEquals(editions, bookEntry.getEditions());
         assertTrue(edition1.compare(bookEntry.getEditionByIsbn("123")));
-        //czy zamiast tych dwoch linijek assertTrue(edition1.compare(bookEntry.getEditionByIsbn("123")) && bookEntry.getEditions.size() == 1);
     }
 
     @Test
@@ -86,7 +84,7 @@ class BookEntryTest {
     }
 
     @Test
-    public void compareIfDifferentWhenDifferentEditions() { //i na book i na edycje, bo mogloby byc ze sa rozne tylko jak book jest iiny, a musi byc i book i editions, czy sie nie oplaca
+    public void compareIfDifferentWhenDifferentEditions() {
         BookEntry bookEntry1 = new BookEntry(new Book(1, "title", "author", "0000"));
         bookEntry1.addEdition(new Edition("123", "0000"));
         BookEntry bookEntry2 = new BookEntry(new Book(1, "title", "author", "0000"));

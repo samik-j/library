@@ -2,7 +2,7 @@ package libraryPackage;
 
 public class Edition {
     private final String isbn;
-    private String publicationYear; // change name
+    private String publicationYear;
     private int quantity;
 
     public Edition(String _isbn, String _publicationYear) {
@@ -37,6 +37,11 @@ public class Edition {
         Edition edition = (Edition) o;
 
         return isbn != null ? isbn.equals(edition.isbn) : edition.isbn == null;
+    }
+
+    @Override
+    public String toString() {
+        return "" + isbn + ", " + publicationYear + ", " + quantity;
     }
 
     @Override

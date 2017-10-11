@@ -21,7 +21,7 @@ class EditionTest {
     }
 
     @Test
-    public void copareIfSame() {
+    public void compareIfSame() {
         Edition edition1 = new Edition("123", "2000");
         Edition edition2 = new Edition("123", "2000");
         assertTrue(edition1.compare(edition2));
@@ -33,4 +33,5 @@ class EditionTest {
         Edition edition2 = new Edition("123", "2001");
         assertFalse(edition1.compare(edition2));
     }
+    //test toString
 }

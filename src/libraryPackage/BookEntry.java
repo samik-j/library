@@ -32,8 +32,21 @@ public class BookEntry {
         return null;
     }
 
+    boolean compareEditions(Edition e1, Edition e2)
+    {
+        return false;
+    }
+
     public boolean compare(BookEntry bookEntry) {
-        return this.book.compare(bookEntry.book) && this.editions.equals(bookEntry.editions); //to jest niepelne compare bo nie moge zrobic compare na editions
+        return this.book.compare(bookEntry.book) && this.editions.equals(bookEntry.editions);
+    }
+
+    @Override
+    public String toString() {
+        String bookEntryToString = "" + this.book + "\n\teditions:";
+        for(Edition edition : this.editions)
+            bookEntryToString += "\n\t" + edition;
+        return bookEntryToString;
     }
 
     @Override
@@ -43,7 +56,7 @@ public class BookEntry {
 
         BookEntry bookEntry = (BookEntry) o;
 
-        return book != null ? book.equals(bookEntry.book) : bookEntry.book == null; // chrck quantity //ale teraz nie mam quantity to co mam set sprawdzac? czy zrobic compare
+        return book != null ? book.equals(bookEntry.book) : bookEntry.book == null;
     }
 
 }

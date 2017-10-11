@@ -13,18 +13,18 @@ public class Catalogue {
         return this.books;
     }
 
-    public BookEntry getBookEntryById(final int id) throws BookNotFoundException { //tu dodalam ze moze byc exception
+    public BookEntry getBookEntryById(final int id) throws BookNotFoundException {
         if(this.books.containsKey(id))
             return this.books.get(id);
         else
             throw new BookNotFoundException("Id not found");
     }
 
-    public Set<Edition> getEditionsById(final int id) throws BookNotFoundException { // czy w tych dwoch tez robic if i throw czy nie?
+    public Set<Edition> getEditionsById(final int id) throws BookNotFoundException {
         return this.getBookEntryById(id).getEditions();
     }
 
-    public Book getBookById(final int id) throws BookNotFoundException { // czy w tych dwoch tez robic if i throw czy nie?
+    public Book getBookById(final int id) throws BookNotFoundException {
             return this.getBookEntryById(id).getBook();
     }
 
@@ -39,10 +39,8 @@ public class Catalogue {
             final String publicationYear = bookInfo[5];
 
             this.addBook(new Book(id, title, author, originalPublicationYear));
-            this.addEdition(id, isbn, publicationYear);
+            this.getEditionsById(id).add(new Edition(isbn, publicationYear));
         } catch (ObjectDuplicationException e) {
-            throw e;
-        } catch (BookNotFoundException e) { //nigdy nie bedzie tego exception bo dodaje edition do book ktory tez dodaje. to usunac??
             throw e;
         } catch (Exception e) {
             throw new Exception("Wrong information format");
@@ -79,7 +77,7 @@ public class Catalogue {
             final String isbn = editionInfo[1];
             final String publicationYear = editionInfo[2];
 
-            this.addEdition(id, isbn, publicationYear);
+            this.tryToAddEdition(id, isbn, publicationYear);
         } catch (ObjectDuplicationException e) {
             throw e;
         } catch (BookNotFoundException e) {
@@ -89,7 +87,7 @@ public class Catalogue {
         }
     }
 
-    private void addEdition(final int id, final String isbn, final String publicationYear) throws BookNotFoundException, ObjectDuplicationException {
+    private void tryToAddEdition(final int id, final String isbn, final String publicationYear) throws BookNotFoundException, ObjectDuplicationException {
         if(this.books.containsKey(id)) {
             Edition edition = new Edition(isbn, publicationYear);
 
