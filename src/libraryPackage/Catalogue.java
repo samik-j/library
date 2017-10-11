@@ -9,69 +9,79 @@ public class Catalogue {
         this.books = new HashMap<>();
     }
 
-    public void addFromString(String book) throws Exception {// usunac to cale
-        try{
-            final String[] bookInformation = book.split(", ");
-            if(bookInformation.length ==6)
-                this.addBookEntryFromString(bookInformation);
-            else if(bookInformation.length == 3)
-                this.addEditionFromString(bookInformation);
-            else if(bookInformation.length ==4)
-                this.addBookFromString(bookInformation);
-        } catch (BookNotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            throw e; //bo throwuje te exceptiony z poszczegolnych funkcji, czy zrobic throw new exception("wrong information format") ?
-        }
-    }
-
     public Map<Integer, BookEntry> getAllIdAnBookQuantities() {
         return this.books;
     }
 
-    public BookEntry getBookEntryById(final int id) {
-        return this.books.get(id);
+    public BookEntry getBookEntryById(final int id) throws BookNotFoundException { //tu dodalam ze moze byc exception
+        if(this.books.containsKey(id))
+            return this.books.get(id);
+        else
+            throw new BookNotFoundException("Id not found");
     }
 
-    public Set<Edition> getEditionsById(final int id) {
+    public Set<Edition> getEditionsById(final int id) throws BookNotFoundException { // czy w tych dwoch tez robic if i throw czy nie?
         return this.getBookEntryById(id).getEditions();
     }
 
-    private void addBook(final Book book) {
-        if(!this.books.containsKey(book.getId()))
-            this.books.put(book.getId(), new BookEntry(book, new HashSet<>()));
-        //throw exception ze juz jest takie id
+    public Book getBookById(final int id) throws BookNotFoundException { // czy w tych dwoch tez robic if i throw czy nie?
+            return this.getBookEntryById(id).getBook();
     }
 
-    private void addBookFromString(final String[] bookInfo) throws Exception {
+    public void addBookEntryFromString(final String bookInformation) throws Exception {
         try {
+            final String[] bookInfo = bookInformation.split(", ");
             final int id = Integer.parseInt(bookInfo[0]);
             final String title = bookInfo[1];
             final String author = bookInfo[2];
-            final String originalPublicationDate = bookInfo[3];
-            this.addBook(new Book(id, title, author, originalPublicationDate));
+            final String originalPublicationYear = bookInfo[3];
+            final String isbn = bookInfo[4];
+            final String publicationYear = bookInfo[5];
+
+            this.addBook(new Book(id, title, author, originalPublicationYear));
+            this.addEdition(id, isbn, publicationYear);
+        } catch (ObjectDuplicationException e) {
+            throw e;
+        } catch (BookNotFoundException e) { //nigdy nie bedzie tego exception bo dodaje edition do book ktory tez dodaje. to usunac??
+            throw e;
         } catch (Exception e) {
             throw new Exception("Wrong information format");
         }
     }
 
-    private void addEdition(final int id, final String isbn, final String publicationDate) throws BookNotFoundException {
-        if(this.books.containsKey(id)) {
-            Edition edition = new Edition(isbn, publicationDate);
-            if(!this.getEditionsById(id).contains(edition))
-                this.getEditionsById(id).add(edition);
-            //jak jest juz edycja to exception
+    public void addBookFromString(final String bookInformation) throws Exception {
+        try {
+            final String[] bookInfo = bookInformation.split(", ");
+            final int id = Integer.parseInt(bookInfo[0]);
+            final String title = bookInfo[1];
+            final String author = bookInfo[2];
+            final String originalPublicationYear = bookInfo[3];
+
+            this.addBook(new Book(id, title, author, originalPublicationYear));
+        } catch (ObjectDuplicationException e){
+            throw e;
+        } catch (Exception e) {
+            throw new Exception("Wrong information format");
         }
-        else
-            throw new BookNotFoundException("Book with id " + id + " does not exist");
     }
 
-    private void addEditionFromString(final String[] editionInfo) throws Exception {
+    private void addBook(final Book book) throws ObjectDuplicationException {
+        if(!this.books.containsKey(book.getId()))
+            this.books.put(book.getId(), new BookEntry(book));
+        else
+            throw new ObjectDuplicationException("Id already exists");
+    }
+
+    public void addEditionFromString(final String editionInformation) throws Exception {
         try {
+            final String[] editionInfo = editionInformation.split(", ");
             final int id = Integer.parseInt(editionInfo[0]);
             final String isbn = editionInfo[1];
-            final String publicationDate = editionInfo[2];
-            this.addEdition(id, isbn, publicationDate);
+            final String publicationYear = editionInfo[2];
+
+            this.addEdition(id, isbn, publicationYear);
+        } catch (ObjectDuplicationException e) {
+            throw e;
         } catch (BookNotFoundException e) {
             throw e;
         } catch (Exception e) {
@@ -79,22 +89,16 @@ public class Catalogue {
         }
     }
 
-    private void addBookEntryFromString(final String[] bookInfo) throws Exception {
-        try {
-            final int id = Integer.parseInt(bookInfo[0]);
-            final String title = bookInfo[1];
-            final String author = bookInfo[2];
-            final String originalPublicationDate = bookInfo[3];
-            final String isbn = bookInfo[4];
-            final String publicationDate = bookInfo[5];
+    private void addEdition(final int id, final String isbn, final String publicationYear) throws BookNotFoundException, ObjectDuplicationException {
+        if(this.books.containsKey(id)) {
+            Edition edition = new Edition(isbn, publicationYear);
 
-            this.addBook(new Book(id, title, author, originalPublicationDate));
-            this.addEdition(id, isbn, publicationDate);
-        } catch (BookNotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new Exception("Wrong information format");
+            if(!this.getEditionsById(id).contains(edition))
+                this.getEditionsById(id).add(edition);
+            else
+                throw new ObjectDuplicationException("Edition already exists");
         }
+        else
+            throw new BookNotFoundException("Id not found");
     }
-
 }

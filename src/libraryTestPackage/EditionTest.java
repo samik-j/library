@@ -20,4 +20,17 @@ class EditionTest {
         assertEquals(0, edition.getQuantity());
     }
 
+    @Test
+    public void copareIfSame() {
+        Edition edition1 = new Edition("123", "2000");
+        Edition edition2 = new Edition("123", "2000");
+        assertTrue(edition1.compare(edition2));
+    }
+
+    @Test
+    public void compareIfDifferent() {
+        Edition edition1 = new Edition("123", "2000");
+        Edition edition2 = new Edition("123", "2001");
+        assertFalse(edition1.compare(edition2));
+    }
 }

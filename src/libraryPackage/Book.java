@@ -4,13 +4,13 @@ public class Book {
     private final int id;
     private String title;
     private String author;
-    private String originalPublicationDate; // change name
+    private String originalPublicationYear; // change name
 
-    public Book(int _id, String _title, String _author, String _originalPublicationDate) {
+    public Book(int _id, String _title, String _author, String _originalPublicationYear) {
         this.id = _id;
         this.title = _title;
         this.author = _author;
-        this.originalPublicationDate = _originalPublicationDate;
+        this.originalPublicationYear = _originalPublicationYear;
     }
 
     public int getId() {
@@ -19,7 +19,7 @@ public class Book {
 
     public boolean compare(final Book book) {
         return this.id == book.id && this.title.equals(book.title)
-                && this.author.equals(book.author) && this.originalPublicationDate.equals(book.originalPublicationDate);
+                && this.author.equals(book.author) && this.originalPublicationYear.equals(book.originalPublicationYear);
     }
 
     @Override
@@ -39,6 +39,6 @@ public class Book {
 
     @Override
     public String toString() {
-        return  "" + this.id + ", " + this.title + ", " + this.author + ", " + this.originalPublicationDate;
+        return  "" + this.id + ", " + this.title + ", " + this.author + ", " + this.originalPublicationYear;
     }
 }

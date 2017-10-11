@@ -16,8 +16,11 @@ class BookEntryTest {
         Edition edition1 = new Edition("123", "0000");
         Set<Edition> editions = new HashSet<>();
         editions.add(edition1);
-        BookEntry bookEntry = new BookEntry(new Book(1, "title", "author", "0000"), new HashSet<>(editions));
+        BookEntry bookEntry = new BookEntry(new Book(1, "title", "author", "0000"));
+        bookEntry.addEdition(edition1);
         assertEquals(editions, bookEntry.getEditions());
+        assertTrue(edition1.compare(bookEntry.getEditionByIsbn("123")));
+        //czy zamiast tych dwoch linijek assertTrue(edition1.compare(bookEntry.getEditionByIsbn("123")) && bookEntry.getEditions.size() == 1);
     }
 
     @Test
@@ -25,8 +28,9 @@ class BookEntryTest {
         Edition edition1 = new Edition("123", "0000");
         Set<Edition> editions = new HashSet<>();
         editions.add(edition1);
-        BookEntry bookEntry = new BookEntry(new Book(1, "title", "author", "0000"), new HashSet<>(editions));
-        assertEquals(edition1, bookEntry.getEditionByIsbn("123"));
+        BookEntry bookEntry = new BookEntry(new Book(1, "title", "author", "0000"));
+        bookEntry.addEdition(edition1);
+        assertTrue(edition1.compare(bookEntry.getEditionByIsbn("123")));
     }
 
     @Test
@@ -34,28 +38,60 @@ class BookEntryTest {
         Edition edition1 = new Edition("123", "0000");
         Set<Edition> editions = new HashSet<>();
         editions.add(edition1);
-        BookEntry bookEntry = new BookEntry(new Book(1, "title", "author", "0000"), new HashSet<>(editions));
-        //assertnull
-        assertEquals(null, bookEntry.getEditionByIsbn("124"));
+        BookEntry bookEntry = new BookEntry(new Book(1, "title", "author", "0000"));
+        bookEntry.addEdition(edition1);
+        assertNull(bookEntry.getEditionByIsbn("124"));
     }
 
     @Test
-    public void testAddEditionIfHasSuch() { //czy to sie oplaca miec??
+    public void testAddEditionIfHasSuch() {
         Edition edition1 = new Edition("123", "0000");
         Set<Edition> editions = new HashSet<>();
         editions.add(edition1);
-        BookEntry bookEntry = new BookEntry(new Book(1, "title", "author", "0000"), new HashSet<>(editions));
+        BookEntry bookEntry = new BookEntry(new Book(1, "title", "author", "0000"));
+        bookEntry.addEdition(edition1);
         Edition edition2 = new Edition("123", "2000");
         bookEntry.addEdition(edition2);
-        assertEquals(editions, bookEntry.getEditions()); //tak czyt new HashSet<>(editions) czy inaczej??
+        assertEquals(editions, bookEntry.getEditions());
+        assertTrue(edition1.compare(bookEntry.getEditionByIsbn("123")));
+        //czy zamiast tych dwoch linijek assertTrue(edition1.compare(bookEntry.getEditionByIsbn("123")) && bookEntry.getEditions.size() == 1);
     }
 
     @Test
     public void testAddEdition() {
         Edition edition1 = new Edition("123", "0000");
-        BookEntry bookEntry = new BookEntry(new Book(1, "title", "author", "0000"), new HashSet<>());
+        BookEntry bookEntry = new BookEntry(new Book(1, "title", "author", "0000"));
         bookEntry.addEdition(edition1);
-        assertEquals(edition1, bookEntry.getEditionByIsbn("123"));
+        assertTrue(edition1.compare(bookEntry.getEditionByIsbn("123")));
+    }
+
+    @Test
+    public void compareIfSame() {
+        Edition edition1 = new Edition("123", "0000");
+        BookEntry bookEntry1 = new BookEntry(new Book(1, "title", "author", "0000"));
+        bookEntry1.addEdition(edition1);
+        BookEntry bookEntry2 = new BookEntry(new Book(1, "title", "author", "0000"));
+        bookEntry2.addEdition(edition1);
+        assertTrue(bookEntry1.compare(bookEntry2));
+    }
+
+    @Test
+    public void compareIfDifferentWhenDifferentBook() {
+        Edition edition1 = new Edition("123", "0000");
+        BookEntry bookEntry1 = new BookEntry(new Book(1, "title", "author", "0000"));
+        bookEntry1.addEdition(edition1);
+        BookEntry bookEntry2 = new BookEntry(new Book(1, "title2", "author", "0000"));
+        bookEntry2.addEdition(edition1);
+        assertFalse(bookEntry1.compare(bookEntry2));
+    }
+
+    @Test
+    public void compareIfDifferentWhenDifferentEditions() { //i na book i na edycje, bo mogloby byc ze sa rozne tylko jak book jest iiny, a musi byc i book i editions, czy sie nie oplaca
+        BookEntry bookEntry1 = new BookEntry(new Book(1, "title", "author", "0000"));
+        bookEntry1.addEdition(new Edition("123", "0000"));
+        BookEntry bookEntry2 = new BookEntry(new Book(1, "title", "author", "0000"));
+        bookEntry2.addEdition(new Edition("124", "0000"));
+        assertFalse(bookEntry1.compare(bookEntry2));
     }
 
 }

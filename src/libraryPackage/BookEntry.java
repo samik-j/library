@@ -1,20 +1,23 @@
 package libraryPackage;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class BookEntry {
-    private Book book; // final
-    private int quantity ; // not needed
-    private Set<Edition> editions; // final
+    private final Book book;
+    private final Set<Edition> editions;
 
-    public BookEntry(Book _book, Set<Edition> _editions) { //czy editions nie powinno byc w konstruktorze?
+    public BookEntry(Book _book) {
         this.book = _book;
-        this.quantity = 0;
-        this.editions = _editions;
+        this.editions = new HashSet<>();
     }
 
     public void addEdition(final Edition edition) {
         editions.add(edition);
+    }
+
+    public Book getBook() {
+        return this.book;
     }
 
     public Set<Edition> getEditions() {
@@ -29,6 +32,10 @@ public class BookEntry {
         return null;
     }
 
+    public boolean compare(BookEntry bookEntry) {
+        return this.book.compare(bookEntry.book) && this.editions.equals(bookEntry.editions); //to jest niepelne compare bo nie moge zrobic compare na editions
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -36,7 +43,7 @@ public class BookEntry {
 
         BookEntry bookEntry = (BookEntry) o;
 
-        return book != null ? book.equals(bookEntry.book) : bookEntry.book == null; // chrck quantity
+        return book != null ? book.equals(bookEntry.book) : bookEntry.book == null; // chrck quantity //ale teraz nie mam quantity to co mam set sprawdzac? czy zrobic compare
     }
 
 }
