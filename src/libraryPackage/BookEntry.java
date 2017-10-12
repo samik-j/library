@@ -32,21 +32,37 @@ public class BookEntry {
         return null;
     }
 
-    boolean compareEditions(Edition e1, Edition e2)
+    public boolean compareEditions(Set<Edition> editions1, Set<Edition> editions2)
     {
+        int counter = 0;
+        if(editions1.equals(editions2)) {
+            for (Edition edition1 : editions1) {
+                for(Edition edition2 : editions2) {
+                    if(edition1.compare(edition2))
+                        counter++;
+                }
+            }
+            if(counter == editions1.size())
+                return true;
+        }
         return false;
     }
 
     public boolean compare(BookEntry bookEntry) {
-        return this.book.compare(bookEntry.book) && this.editions.equals(bookEntry.editions);
+        return this.book.compare(bookEntry.book) && this.compareEditions(this.editions, bookEntry.editions);
     }
 
     @Override
     public String toString() {
-        String bookEntryToString = "" + this.book + "\n\teditions:";
+        String bookEntryToString = "" + this.book + "\n\teditions:"; //z tym moze byc problem przy wpisywaniu z pliku to nie lepiej zrobic public void print?
         for(Edition edition : this.editions)
             bookEntryToString += "\n\t" + edition;
         return bookEntryToString;
+    }
+
+    @Override
+    public int hashCode() { //musialam overrideowac bo mam hashset w catalogue. i wtedy testy te co sa do metod Set<BookEntry> nie dawaly dobrego wyniku w assertEquals
+        return this.book.getId();
     }
 
     @Override

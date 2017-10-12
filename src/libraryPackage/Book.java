@@ -4,13 +4,21 @@ public class Book {
     private final int id;
     private String title;
     private String author;
-    private String originalPublicationYear; // change name
+    private String originalPublicationYear;
 
     public Book(int _id, String _title, String _author, String _originalPublicationYear) {
         this.id = _id;
         this.title = _title;
         this.author = _author;
         this.originalPublicationYear = _originalPublicationYear;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public String getAuthor() {
+        return this.author;
     }
 
     public int getId() {

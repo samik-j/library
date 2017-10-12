@@ -20,12 +20,44 @@ public class Catalogue {
             throw new BookNotFoundException("Id not found");
     }
 
+    public Book getBookById(final int id) throws BookNotFoundException {
+        return this.getBookEntryById(id).getBook();
+    }
+
+    public Set<BookEntry> getBookEntriesByTitle(final String title) throws BookNotFoundException {
+        Set<BookEntry> found = new HashSet<>();
+        for(BookEntry bookEntry : this.books.values()) {
+            if(bookEntry.getBook().getTitle().contains(title)) {
+                found.add(bookEntry);
+            }
+        }
+        if(found.isEmpty())
+            throw new BookNotFoundException("Title not found");
+        return found;
+    }
+
+    public Set<BookEntry> getBookEntriesByAuthor(final String author) throws BookNotFoundException {
+        Set<BookEntry> found = new HashSet<>();
+        for(BookEntry bookEntry : this.books.values()) {
+            if(bookEntry.getBook().getAuthor().contains(author)) {
+                found.add(bookEntry);
+            }
+        }
+        if(found.isEmpty())
+            throw new BookNotFoundException("Author not found");
+        return found;
+    }
+
     public Set<Edition> getEditionsById(final int id) throws BookNotFoundException {
         return this.getBookEntryById(id).getEditions();
     }
 
-    public Book getBookById(final int id) throws BookNotFoundException {
-            return this.getBookEntryById(id).getBook();
+    public BookEdition getBookEditionByIsbn(final String isbn) throws BookNotFoundException {
+        for(BookEntry bookEntry : this.books.values()) {
+            if(bookEntry.getEditions().contains(new Edition(isbn, "date")))
+                return new BookEdition(bookEntry.getBook(), bookEntry.getEditionByIsbn(isbn));
+        }
+        throw new BookNotFoundException("Edition not Found");
     }
 
     public void addBookEntryFromString(final String bookInformation) throws Exception {

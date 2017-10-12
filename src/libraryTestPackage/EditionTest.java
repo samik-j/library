@@ -33,5 +33,11 @@ class EditionTest {
         Edition edition2 = new Edition("123", "2001");
         assertFalse(edition1.compare(edition2));
     }
-    //test toString
+
+    @Test
+    public void testToString() {
+        Edition edition1 = new Edition("123", "2000");
+        String expected = "123, 2000, 0";
+        assertEquals(expected, edition1.toString());
+    }
 }

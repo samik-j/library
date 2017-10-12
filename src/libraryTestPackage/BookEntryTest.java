@@ -88,8 +88,39 @@ class BookEntryTest {
         BookEntry bookEntry1 = new BookEntry(new Book(1, "title", "author", "0000"));
         bookEntry1.addEdition(new Edition("123", "0000"));
         BookEntry bookEntry2 = new BookEntry(new Book(1, "title", "author", "0000"));
-        bookEntry2.addEdition(new Edition("124", "0000"));
+        bookEntry2.addEdition(new Edition("123", "0030"));
         assertFalse(bookEntry1.compare(bookEntry2));
     }
 
+    @Test
+    public void testToString() {
+        String expected = "1, title, author, date1\n\teditions:\n\t123, date2, 0";
+        BookEntry bookEntry =  new BookEntry(new Book(1, "title", "author", "date1"));
+        bookEntry.addEdition(new Edition("123", "date2"));
+        assertEquals(expected, bookEntry.toString());
+    }
+
+    @Test
+    public void compareEditionsIfSame() {
+        Set<Edition> editions1 = new HashSet<>();
+        Set<Edition> editions2 = new HashSet<>();
+        editions1.add(new Edition("123", "0000"));
+        editions1.add(new Edition("124", "0000"));
+        editions2.add(new Edition("123", "0000"));
+        editions2.add(new Edition("124", "0000"));
+        BookEntry bookEntry =  new BookEntry(new Book(1, "title", "author", "date1"));
+        assertTrue(bookEntry.compareEditions(editions1, editions2));
+    }
+
+    @Test
+    public void compareEditionsIfDifferent() {
+        Set<Edition> editions1 = new HashSet<>();
+        Set<Edition> editions2 = new HashSet<>();
+        editions1.add(new Edition("123", "0000"));
+        editions1.add(new Edition("124", "0001"));
+        editions2.add(new Edition("123", "0000"));
+        editions2.add(new Edition("124", "0000"));
+        BookEntry bookEntry =  new BookEntry(new Book(1, "title", "author", "date1"));
+        assertFalse(bookEntry.compareEditions(editions1, editions2));
+    }
 }
