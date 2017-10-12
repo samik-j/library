@@ -4,11 +4,13 @@ public class Edition {
     private final String isbn;
     private String publicationYear;
     private int quantity;
+    private int borrowed;
 
     public Edition(String _isbn, String _publicationYear) {
         this.isbn = _isbn;
         this.quantity = 0;
         this.publicationYear = _publicationYear;
+        this.borrowed = 0;
     }
 
     public void addQuantity(final int quantity) { // add remove :)
@@ -21,6 +23,18 @@ public class Edition {
 
     public String getIsbn() {
         return this.isbn;
+    }
+
+    public boolean borrow() {
+        if(this.quantity > this.borrowed) {
+            ++this.borrowed;
+            return true;
+        }
+        return false;
+    }
+
+    public int getBorrowed() {
+        return this.borrowed;
     }
 
     public boolean compare(Edition edition) {

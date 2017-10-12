@@ -3,6 +3,7 @@ package libraryTestPackage;
 import libraryPackage.Book;
 import libraryPackage.BookEntry;
 import libraryPackage.Edition;
+import libraryPackage.EditionNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BookEntryTest {
     @Test
-    public void testGetEditions() {
+    public void testGetEditions() throws EditionNotFoundException {
         Edition edition1 = new Edition("123", "0000");
         Set<Edition> editions = new HashSet<>();
         editions.add(edition1);
@@ -23,7 +24,7 @@ class BookEntryTest {
     }
 
     @Test
-    public void getEditionByIsbnIfHasSuch() {
+    public void getEditionByIsbnIfHasSuch() throws EditionNotFoundException {
         Edition edition1 = new Edition("123", "0000");
         Set<Edition> editions = new HashSet<>();
         editions.add(edition1);
@@ -33,17 +34,20 @@ class BookEntryTest {
     }
 
     @Test
-    public void getEditionByIsbnIfHasNoSuchReturnsNull() {
+    public void getEditionByIsbnIfHasNoSuchThrowsException() throws EditionNotFoundException {
         Edition edition1 = new Edition("123", "0000");
         Set<Edition> editions = new HashSet<>();
         editions.add(edition1);
         BookEntry bookEntry = new BookEntry(new Book(1, "title", "author", "0000"));
         bookEntry.addEdition(edition1);
-        assertNull(bookEntry.getEditionByIsbn("124"));
+        assertThrows(EditionNotFoundException.class, () ->
+        {
+            bookEntry.getEditionByIsbn("124");
+        });
     }
 
     @Test
-    public void testAddEditionIfHasSuch() {
+    public void testAddEditionIfHasSuch() throws EditionNotFoundException {
         Edition edition1 = new Edition("123", "0000");
         Set<Edition> editions = new HashSet<>();
         editions.add(edition1);
@@ -56,7 +60,7 @@ class BookEntryTest {
     }
 
     @Test
-    public void testAddEdition() {
+    public void testAddEdition() throws EditionNotFoundException {
         Edition edition1 = new Edition("123", "0000");
         BookEntry bookEntry = new BookEntry(new Book(1, "title", "author", "0000"));
         bookEntry.addEdition(edition1);

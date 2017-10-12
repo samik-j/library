@@ -24,12 +24,12 @@ public class BookEntry {
         return this.editions;
     }
 
-    public Edition getEditionByIsbn(final String isbn) {
+    public Edition getEditionByIsbn(final String isbn) throws EditionNotFoundException {
         for(Edition edition : editions) {
             if(edition.getIsbn().equals(isbn))
                 return edition;
         }
-        return null;
+        throw new EditionNotFoundException("Edition not found");
     }
 
     public boolean compareEditions(Set<Edition> editions1, Set<Edition> editions2)
@@ -54,14 +54,14 @@ public class BookEntry {
 
     @Override
     public String toString() {
-        String bookEntryToString = "" + this.book + "\n\teditions:"; //z tym moze byc problem przy wpisywaniu z pliku to nie lepiej zrobic public void print?
+        String bookEntryToString = "" + this.book + "\n\teditions:";
         for(Edition edition : this.editions)
             bookEntryToString += "\n\t" + edition;
         return bookEntryToString;
     }
 
     @Override
-    public int hashCode() { //musialam overrideowac bo mam hashset w catalogue. i wtedy testy te co sa do metod Set<BookEntry> nie dawaly dobrego wyniku w assertEquals
+    public int hashCode() {
         return this.book.getId();
     }
 

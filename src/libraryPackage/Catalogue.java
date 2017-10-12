@@ -52,9 +52,9 @@ public class Catalogue {
         return this.getBookEntryById(id).getEditions();
     }
 
-    public BookEdition getBookEditionByIsbn(final String isbn) throws BookNotFoundException {
+    public BookEdition getBookEditionByIsbn(final String isbn) throws BookNotFoundException, EditionNotFoundException {
         for(BookEntry bookEntry : this.books.values()) {
-            if(bookEntry.getEditions().contains(new Edition(isbn, "date")))
+            if(bookEntry.getEditions().contains(new Edition(isbn, "date"))) // add second constructor without date
                 return new BookEdition(bookEntry.getBook(), bookEntry.getEditionByIsbn(isbn));
         }
         throw new BookNotFoundException("Edition not Found");
@@ -130,5 +130,10 @@ public class Catalogue {
         }
         else
             throw new BookNotFoundException("Id not found");
+    }
+
+    public void borrowBook(final int id, final String isbn) throws Exception {
+        if(!this.getBookEntryById(id).getEditionByIsbn(isbn).borrow())
+            throw new Exception("Book not available");
     }
 }

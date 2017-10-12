@@ -40,4 +40,28 @@ class EditionTest {
         String expected = "123, 2000, 0";
         assertEquals(expected, edition1.toString());
     }
+
+    @Test
+    public void testBorrowIfQuantityIsZero() {
+        Edition edition1 = new Edition("123", "2000");
+        assertFalse(edition1.borrow());
+        assertEquals(0, edition1.getBorrowed());
+    }
+
+    @Test
+    public void testBorrowIfQuantityIsMoreThanBorrowed() {
+        Edition edition1 = new Edition("123", "2000");
+        edition1.addQuantity(1);
+        assertTrue(edition1.borrow());
+        assertEquals(1, edition1.getBorrowed());
+    }
+
+    @Test
+    public void testBorrowIfQuantityIsLessThanBorrowed() {
+        Edition edition1 = new Edition("123", "2000");
+        edition1.addQuantity(1);
+        edition1.borrow();
+        assertFalse(edition1.borrow());
+        assertEquals(1, edition1.getBorrowed());
+    }
 }

@@ -27,12 +27,14 @@ public class Library {
     }
 
     private int getAction() {
-        System.out.println("1 PRINT CATALOGUE\n" +
+        System.out.println("" +
+                "1 PRINT CATALOGUE\n" +
                 "2 ADD BOOK ENTRY\n" +
                 "3 ADD BOOK\n" +
                 "4 ADD EDITION\n" +
                 "5 SEARCH BOOK\n" +
                 "6 SEARCH EDITION\n" +
+                "7 BORROW\n" +
                 "0 EXIT");
         return input.nextInt();
     }
@@ -57,13 +59,16 @@ public class Library {
             case 6:
                 this.searchBookEditionInCatalogue();
                 break;
+            case 7:
+                this.borrowBook();
+                break;
             default:
                 break;
         }
     }
 
     private void printCatalogue() {
-        for(Map.Entry<Integer, BookEntry> entry : catalogue.getAllIdAnBookQuantities().entrySet()) { 
+        for(Map.Entry<Integer, BookEntry> entry : catalogue.getAllIdAnBookQuantities().entrySet()) {
             System.out.println(entry.getValue());
         }
     }
@@ -136,6 +141,7 @@ public class Library {
         input.nextLine();
         final String title = input.nextLine();
         try {
+            //sprawdzic czy puste jak jest to napisac ze nie znalazlo
             this.printBookEntries(this.catalogue.getBookEntriesByTitle(title));
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -162,6 +168,18 @@ public class Library {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private void borrowBook() {
+        System.out.println("id, isbn");
+        final int id = input.nextInt();
+        final String isbn = input.nextLine();
+        try {
+            this.catalogue.borrowBook(id, isbn);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     private void printBookEntries(Set<BookEntry> bookEntries) {

@@ -160,7 +160,7 @@ class CatalogueTest {
         expected.add(expected2);
 
 
-        assertEquals(expected, this.catalogue.getBookEntriesByTitle("titl")); //jak to inaczej zrobic? bo nie moge compare na secie, czy porownywac tylko pojedyncze znalezienia?
+        assertEquals(expected, this.catalogue.getBookEntriesByTitle("titl"));
     }
 
     @Test
@@ -184,7 +184,7 @@ class CatalogueTest {
         expected.add(expected1);
         expected.add(expected2);
 
-        assertTrue(expected.equals(this.catalogue.getBookEntriesByAuthor("lastName"))); //jak to inaczej zrobic? bo nie moge compare na secie, czy porownywac tylko pojedyncze znalezienia?
+        assertTrue(expected.equals(this.catalogue.getBookEntriesByAuthor("lastName")));
     }
 
     @Test
@@ -192,6 +192,41 @@ class CatalogueTest {
         assertThrows(BookNotFoundException.class, () ->
         {
             this.catalogue.getBookEntriesByAuthor("author");
+        });
+    }
+
+    @Test
+    public void borrowBookIfAvailable() throws Exception {
+        this.catalogue.addBookEntryFromString("1, title, name1 lastName, 2000, 123, 2020");
+        this.catalogue.getBookEntryById(1).getEditionByIsbn("123").addQuantity(1);
+        this.catalogue.borrowBook(1, "123");
+        assertEquals(1, this.catalogue.getBookEntryById(1).getEditionByIsbn("123").getBorrowed());
+    }
+
+    @Test
+    public void borrowBookIfUnavailable() throws Exception {
+        this.catalogue.addBookEntryFromString("1, title, name1 lastName, 2000, 123, 2020");
+        assertThrows(Exception.class, () ->
+        {
+            this.catalogue.borrowBook(1, "123");
+        });
+    }
+
+    @Test
+    public void borrowBookIfWrongId() throws Exception {
+        this.catalogue.addBookEntryFromString("1, title, name1 lastName, 2000, 123, 2020");
+        assertThrows(BookNotFoundException.class, () ->
+        {
+            this.catalogue.borrowBook(2, "123");
+        });
+    }
+
+    @Test
+    public void borrowBookIfWrongEdition() throws Exception {
+        this.catalogue.addBookEntryFromString("1, title, name1 lastName, 2000, 123, 2020");
+        assertThrows(EditionNotFoundException.class, () ->
+        {
+            this.catalogue.borrowBook(1, "1232");
         });
     }
 }
