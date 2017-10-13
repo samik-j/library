@@ -1,5 +1,6 @@
 package libraryPackage;
 
+import java.io.*;
 import java.util.*;
 
 public class Library {
@@ -19,11 +20,13 @@ public class Library {
     }
 
     public void run() {
+        this.readCatalogueFromFile();
         int action = 0;
         do {
             action = this.getAction();
             runAction(action);
         } while(action != 0);
+        this.printCatalogueToFile();
     }
 
     private int getAction() {
@@ -35,6 +38,7 @@ public class Library {
                 "5 SEARCH BOOK\n" +
                 "6 SEARCH EDITION\n" +
                 "7 BORROW\n" +
+                //add quantity? czy zrobic a add edition opcje add quantity?
                 "0 EXIT");
         return input.nextInt();
     }
@@ -141,8 +145,11 @@ public class Library {
         input.nextLine();
         final String title = input.nextLine();
         try {
-            //sprawdzic czy puste jak jest to napisac ze nie znalazlo
-            this.printBookEntries(this.catalogue.getBookEntriesByTitle(title));
+            Set<BookEntry> found = this.catalogue.getBookEntriesByTitle(title);
+            if(found.isEmpty())
+                System.out.println("Title not found");
+            else
+                this.printBookEntries(found);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -153,7 +160,11 @@ public class Library {
         input.nextLine();
         final String author = input.nextLine();
         try {
-            this.printBookEntries(this.catalogue.getBookEntriesByAuthor(author));
+            Set<BookEntry> found = this.catalogue.getBookEntriesByAuthor(author);
+            if(found.isEmpty())
+                System.out.println("Author not found");
+            else
+                this.printBookEntries(found);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -185,5 +196,32 @@ public class Library {
     private void printBookEntries(Set<BookEntry> bookEntries) {
         for(BookEntry bookEntry : bookEntries)
             System.out.println(bookEntry);
+    }
+
+    private void readCatalogueFromFile() {
+        try {
+            this.catalogue.readFromFile(getBufferedReaderForFile("catalogue.txt"));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static BufferedReader getBufferedReaderForFile(final String fileName) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader("F:\\joanna\\java\\workspace\\library\\textFiles\\" + fileName));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        return reader;
+    }
+
+    private void printCatalogueToFile() {
+        try {
+            BufferedWriter writer = new BufferedWriter((new FileWriter("F:\\joanna\\java\\workspace\\library\\textFiles\\catalogue.txt", false)));
+            this.catalogue.printToFile(writer);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

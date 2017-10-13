@@ -35,10 +35,10 @@ class EditionTest {
     }
 
     @Test
-    public void testToString() {
-        Edition edition1 = new Edition("123", "2000");
-        String expected = "123, 2000, 0";
-        assertEquals(expected, edition1.toString());
+    public void compareIfDifferentQuantity() {
+        Edition edition1 = new Edition("123", "2000", 0, 0);
+        Edition edition2 = new Edition("123", "2000", 1, 0);
+        assertFalse(edition1.compare(edition2));
     }
 
     @Test
@@ -63,5 +63,19 @@ class EditionTest {
         edition1.borrow();
         assertFalse(edition1.borrow());
         assertEquals(1, edition1.getBorrowed());
+    }
+
+    @Test
+    public void testToString() {
+        Edition edition1 = new Edition("123", "2000");
+        String expected = "123, 2000, quantity: 0, borrowed: 0";
+        assertEquals(expected, edition1.toString());
+    }
+
+    @Test
+    public void testPrint() {
+        Edition edition1 = new Edition("123", "2000");
+        String expected = "123, 2000, 0, 0";
+        assertEquals(expected, edition1.print());
     }
 }

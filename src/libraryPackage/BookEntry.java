@@ -32,24 +32,28 @@ public class BookEntry {
         throw new EditionNotFoundException("Edition not found");
     }
 
-    public boolean compareEditions(Set<Edition> editions1, Set<Edition> editions2)
+    public boolean compareEditions(Set<Edition> otherEditions)
     {
         int counter = 0;
-        if(editions1.equals(editions2)) {
-            for (Edition edition1 : editions1) {
-                for(Edition edition2 : editions2) {
-                    if(edition1.compare(edition2))
+        if(this.editions.equals(otherEditions)) {
+            for (Edition edition : this.editions) {
+                for(Edition otherEdition : otherEditions) {
+                    if(edition.compare(otherEdition))
                         counter++;
                 }
             }
-            if(counter == editions1.size())
+            if(counter == this.editions.size())
                 return true;
         }
         return false;
     }
 
     public boolean compare(BookEntry bookEntry) {
-        return this.book.compare(bookEntry.book) && this.compareEditions(this.editions, bookEntry.editions);
+        return this.book.compare(bookEntry.book) && this.compareEditions(bookEntry.editions);
+    }
+
+    public String print() {
+        return this.book.print() + ", " + this.editions.size();
     }
 
     @Override
@@ -72,7 +76,7 @@ public class BookEntry {
 
         BookEntry bookEntry = (BookEntry) o;
 
-        return book != null ? book.equals(bookEntry.book) : bookEntry.book == null;
+        return this.book != null ? this.book.equals(bookEntry.book) : bookEntry.book == null;
     }
 
 }

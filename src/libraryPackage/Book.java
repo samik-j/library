@@ -30,6 +30,10 @@ public class Book {
                 && this.author.equals(book.author) && this.originalPublicationYear.equals(book.originalPublicationYear);
     }
 
+    public String print() {
+        return  "" + this.id + ", " + this.title + ", " + this.author + ", " + this.originalPublicationYear;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -159,16 +159,12 @@ class CatalogueTest {
         expected.add(expected1);
         expected.add(expected2);
 
-
         assertEquals(expected, this.catalogue.getBookEntriesByTitle("titl"));
     }
 
     @Test
     public void getBookEntriesByTitleIfHasNoSuch() {
-        assertThrows(BookNotFoundException.class, () ->
-        {
-            this.catalogue.getBookEntriesByTitle("title");
-        });
+        assertTrue(this.catalogue.getBookEntriesByTitle("title").isEmpty());
     }
 
     @Test
@@ -189,10 +185,7 @@ class CatalogueTest {
 
     @Test
     public void getBookEntriesByAuthorIfHasNoSuch() {
-        assertThrows(BookNotFoundException.class, () ->
-        {
-            this.catalogue.getBookEntriesByAuthor("author");
-        });
+        assertTrue(this.catalogue.getBookEntriesByAuthor("author").isEmpty());
     }
 
     @Test

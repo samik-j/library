@@ -97,34 +97,41 @@ class BookEntryTest {
     }
 
     @Test
+    public void compareEditionsIfSame() {
+        Set<Edition> editions2 = new HashSet<>();
+        editions2.add(new Edition("123", "0000"));
+        editions2.add(new Edition("124", "0000"));
+        BookEntry bookEntry =  new BookEntry(new Book(1, "title", "author", "date1"));
+        bookEntry.addEdition(new Edition("123", "0000"));
+        bookEntry.addEdition(new Edition("124", "0000"));
+        assertTrue(bookEntry.compareEditions(editions2));
+    }
+
+    @Test
+    public void compareEditionsIfDifferent() {
+        Set<Edition> editions2 = new HashSet<>();
+        editions2.add(new Edition("123", "0000"));
+        editions2.add(new Edition("124", "0000"));
+        BookEntry bookEntry =  new BookEntry(new Book(1, "title", "author", "date1"));
+        bookEntry.addEdition(new Edition("123", "0000"));
+        bookEntry.addEdition(new Edition("124", "0001"));
+        assertFalse(bookEntry.compareEditions(editions2));
+    }
+
+    @Test
     public void testToString() {
-        String expected = "1, title, author, date1\n\teditions:\n\t123, date2, 0";
+        String expected = "1, title, author, date1\n\teditions:\n\t123, date2, quantity: 0, borrowed: 0";
         BookEntry bookEntry =  new BookEntry(new Book(1, "title", "author", "date1"));
         bookEntry.addEdition(new Edition("123", "date2"));
         assertEquals(expected, bookEntry.toString());
     }
 
     @Test
-    public void compareEditionsIfSame() {
-        Set<Edition> editions1 = new HashSet<>();
-        Set<Edition> editions2 = new HashSet<>();
-        editions1.add(new Edition("123", "0000"));
-        editions1.add(new Edition("124", "0000"));
-        editions2.add(new Edition("123", "0000"));
-        editions2.add(new Edition("124", "0000"));
+    public void testPrint() {
+        String expected = "1, title, author, date1, 2";
         BookEntry bookEntry =  new BookEntry(new Book(1, "title", "author", "date1"));
-        assertTrue(bookEntry.compareEditions(editions1, editions2));
-    }
-
-    @Test
-    public void compareEditionsIfDifferent() {
-        Set<Edition> editions1 = new HashSet<>();
-        Set<Edition> editions2 = new HashSet<>();
-        editions1.add(new Edition("123", "0000"));
-        editions1.add(new Edition("124", "0001"));
-        editions2.add(new Edition("123", "0000"));
-        editions2.add(new Edition("124", "0000"));
-        BookEntry bookEntry =  new BookEntry(new Book(1, "title", "author", "date1"));
-        assertFalse(bookEntry.compareEditions(editions1, editions2));
+        bookEntry.addEdition(new Edition("123", "date2"));
+        bookEntry.addEdition(new Edition("124", "date2"));
+        assertEquals(expected, bookEntry.print());
     }
 }

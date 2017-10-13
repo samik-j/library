@@ -26,4 +26,10 @@ class BookTest {
         Book book1 = new Book(1, "title", "author", "2017");
         assertEquals("1, title, author, 2017", book1.toString());
     }
+
+    @Test
+    public void testPrint() {
+        Book book1 = new Book(1, "title", "author", "2017");
+        assertEquals("1, title, author, 2017", book1.print());
+    }
 }

@@ -34,7 +34,7 @@ class BookEditionTest {
     @Test
     public void testToString() {
         BookEdition bookEdition1 = new BookEdition(new Book(1, "title", "author", "1000"), new Edition("123", "2020"));
-        String expected = "1, title, author, 1000, 123, 2020, 0";
+        String expected = "1, title, author, 1000, 123, 2020, quantity: 0, borrowed: 0";
         assertEquals(expected, bookEdition1.toString());
     }
 }
