@@ -14,13 +14,19 @@ public class UserInterface {
     }
 
     public static void main(String[] args) {
-        UserInterface userInterface = new UserInterface(new Library(), new Scanner(System.in));
+        UserInterface userInterface = null;
+
+        try {
+            userInterface = new UserInterface(new Library(new FileHandler()), new Scanner(System.in));
+        } catch (Exception e) {
+           System.out.println("Failed to load Library");
+           return;
+        }
 
         userInterface.run();
     }
 
     public void run() {
-        this.readCatalogueFromFile();
         int action = 0;
         do {
             action = this.getAction();
@@ -198,30 +204,11 @@ public class UserInterface {
 
     }
 
-    private void readCatalogueFromFile() {
-        try {
-            this.library.readFromFile(getBufferedReaderForFile("catalogue.txt"));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    private static BufferedReader getBufferedReaderForFile(final String fileName) {
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader("F:\\joanna\\java\\workspace\\library\\textFiles\\" + fileName));
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-        return reader;
-    }
-
     private void printCatalogueToFile() {
         try {
-            BufferedWriter writer = new BufferedWriter((new FileWriter("F:\\joanna\\java\\workspace\\library\\textFiles\\library.txt", false)));
-            this.library.printToFile(writer);
+            this.library.saveCatalogue();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Cannot save catalogue");
         }
     }
 }
