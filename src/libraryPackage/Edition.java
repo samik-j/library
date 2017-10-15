@@ -87,8 +87,6 @@ public class Edition {
         return "" + this.id + ", " + this.isbn + ", " +this.publicationYear + ", " + this.quantity + ", " + this.borrowed;
     }
 
-
-
     @Override
     public String toString() {
         return "id " + this.id + "| " + this.isbn + ", " + this.publicationYear + ", quantity: " + this.quantity + ", borrowed: " + this.borrowed;

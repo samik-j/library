@@ -1,235 +1,129 @@
 package libraryPackage;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class Library {
+    private Map<Integer, Book> catalogue;
 
-    private final Catalogue catalogue;
-    private final Scanner input;
-
-    public Library(Catalogue _catalogue, Scanner _input) {
-        this.catalogue = _catalogue;
-        this.input = _input;
+    public Library() {
+        this.catalogue = new HashMap<>();
     }
 
-    public static void main(String[] args) {
-        Library library = new Library(new Catalogue(), new Scanner(System.in));
-
-        library.run();
+    public Map<Integer, Book> getAllIdAnBooks() { // wierd name
+        return this.catalogue;
     }
 
-    public void run() {
-        this.readCatalogueFromFile();
-        int action = 0;
-        do {
-            action = this.getAction();
-            runAction(action);
-        } while(action != 0);
-        this.printCatalogueToFile();
+    public Book getBookById(final int id) throws BookNotFoundException {
+        if(this.catalogue.containsKey(id))
+            return this.catalogue.get(id);
+        else
+            throw new BookNotFoundException("Id not found");
     }
 
-    private int getAction() {
-        System.out.println("" +
-                "1 PRINT CATALOGUE\n" +
-                //"2 ADD BOOK ENTRY\n" + //add book and editions
-                "3 ADD BOOK\n" +
-                "4 ADD EDITION\n" +
-                "5 SEARCH BOOK\n" +
-                "6 SEARCH EDITION\n" +
-                "7 BORROW\n" +
-                "8 ADD QUANTITY\n" +
-                "0 EXIT");
-        return input.nextInt();
-    }
-
-    private void runAction(int action) {
-        switch(action) {
-            case 1:
-                this.printCatalogue();
-                break;
-            case 2:
-                //this.addBookEntryToCatalogue();
-                break;
-            case 3:
-                this.addBookToCatalogue();
-                break;
-            case 4:
-                this.addEditionToCatalogue();
-                break;
-            case 5:
-                this.searchBookInCatalogue();
-                break;
-            case 6:
-                this.searchBookEditionInCatalogue();
-                break;
-            case 7:
-                this.borrowBook();
-                break;
-            case 8:
-                this.addQuantityToCatalogue();
-            default:
-                break;
-        }
-    }
-
-    private void printCatalogue() {
-        for(Map.Entry<Integer, Book> entry : catalogue.getAllIdAnBooks().entrySet()) {
-            System.out.println(entry.getValue());
-        }
-    }
-/*
-    private void addBookEntryToCatalogue() {
-        System.out.println("id, title, author, originalPublicationDate, isbn, publicationDate");
-        input.nextLine();
-        try {
-            this.catalogue.addBookEntryFromString(input.nextLine());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-*/
-    private void addBookToCatalogue() {
-        System.out.println("id, title, author, originalPublicationDate");
-        input.nextLine();
-        try {
-            this.catalogue.addBookFromString(input.nextLine());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    private void addEditionToCatalogue() {
-        System.out.print("book id : ");
-        final int id = input.nextInt();
-        System.out.println("id, isbn, publicationDate | id, isbn, publicationDate, quantity, borrowed");
-        input.nextLine();
-        try {
-            this.catalogue.addEditionFromStringToBook(id, input.nextLine());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    private void searchBookInCatalogue() {
-        System.out.println("search by id | title | author");
-        Set<String> searchOptions = new HashSet<>(Arrays.asList("id", "title", "author"));
-        String searchBy = "";
-        do {
-            searchBy = input.next();
-            switch(searchBy) {
-                case "id":
-                    this.searchCatalogueById();
-                    break;
-                case "title":
-                    this.searchCatalogueByTitle();
-                    break;
-                case "author":
-                    this.searchCatalogueByAuthor();
-                    break;
-                default:
-                    break;
+    public Set<Book> getBookByTitle(final String title) {
+        Set<Book> found = new HashSet<>();
+        for(Book book : this.catalogue.values()) {
+            if(book.getTitle().contains(title)) {
+                found.add(book);
             }
-        } while(!searchOptions.contains(searchBy));
-    }
-
-    private void searchCatalogueById() {
-        System.out.println("id");
-        final int id = input.nextInt();
-        try {
-            System.out.println(this.catalogue.getBookById(id));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
         }
-
+        return found;
     }
 
-    private void searchCatalogueByTitle() {
-        System.out.println("title");
-        input.nextLine();
-        final String title = input.nextLine();
-        try {
-            Set<Book> found = this.catalogue.getBookByTitle(title);
-            if(found.isEmpty())
-                System.out.println("Title not found");
-            else
-                this.printBooks(found);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+    public Set<Book> getBookByAuthor(final String author) {
+        Set<Book> found = new HashSet<>();
+        for(Book book : this.catalogue.values()) {
+            if(book.getAuthor().contains(author)) {
+                found.add(book);
+            }
         }
+        return found;
     }
 
-    private void searchCatalogueByAuthor() {
-        System.out.println("author");
-        input.nextLine();
-        final String author = input.nextLine();
-        try {
-            Set<Book> found = this.catalogue.getBookByAuthor(author);
-            if(found.isEmpty())
-                System.out.println("Author not found");
-            else
-                this.printBooks(found);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+    public Set<Edition> getEditionsByBookId(final int id) throws BookNotFoundException {
+        return this.getBookById(id).getEditions();
+    }
+
+    public BookEdition getBookEditionByIsbn(final String isbn) throws EditionNotFoundException {
+        for(Book book : this.catalogue.values()) {
+            if(book.getEditions().contains(new Edition(isbn)))
+                return new BookEdition(book, book.getEditionByIsbn(isbn));
         }
+        throw new EditionNotFoundException("Edition not Found");
     }
 
-    private void searchBookEditionInCatalogue() {
-        System.out.println("isbn");
-        input.nextLine();
-        final String isbn = input.nextLine();
+    private Book createBookFromString(final String bookInformation) throws Exception {
+            return new Book(bookInformation.split(", "));
+    }
+
+    private void addBook(final Book book) throws ObjectDuplicationException {
+        if(!this.catalogue.containsKey(book.getId()))
+            this.catalogue.put(book.getId(), book);
+        else
+            throw new ObjectDuplicationException("Id already exists");
+    }
+
+    public void addBookFromString(final String bookInformation) throws Exception {
+            this.addBook(createBookFromString(bookInformation));
+    }
+
+    public void addEditionFromStringToBook(final int id, final String editionInformation) throws Exception {
+        this.getBookById(id).addEditionFromString(editionInformation);
+    }
+
+    public void borrowBook(final int bookId, final int editionId) throws Exception {
+        this.getBookById(bookId).borrow(editionId);
+    }
+
+    public void printToFile(final BufferedWriter writer) throws IOException {
         try {
-            System.out.println(this.catalogue.getBookEditionByIsbn(isbn));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    private void borrowBook() {
-        System.out.println("bookId.editionId");
-        input.nextLine();
-        final String id = input.nextLine();
-        try {
-            this.catalogue.borrowBook(id);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-    }
-
-    private void printBooks(Set<Book> books) {
-        for(Book book : books)
-            System.out.println(book);
-    }
-
-    private void addQuantityToCatalogue() {
-
-    }
-
-    private void readCatalogueFromFile() {
-        try {
-            this.catalogue.readFromFile(getBufferedReaderForFile("catalogue.txt"));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    private static BufferedReader getBufferedReaderForFile(final String fileName) {
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader("F:\\joanna\\java\\workspace\\library\\textFiles\\" + fileName));
+            for(Book book : this.catalogue.values()) {
+                writer.write(book.print());
+                writer.newLine();
+                for(Edition edition : book.getEditions()) {
+                    writer.write(edition.print());
+                    writer.newLine();
+                }
+            }
+            writer.close();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            throw new IOException("Error while writing to file");
         }
-        return reader;
     }
 
-    private void printCatalogueToFile() {
+
+    public void readFromFile(final BufferedReader reader) throws Exception {
+        this.catalogue.clear();
+        this.addBooksFromFile(reader);
+    }
+
+    public void addBooksFromFile(final BufferedReader reader) throws Exception { // create filehandler class to read nad write from file
+        String currentBookLine = "";
         try {
-            BufferedWriter writer = new BufferedWriter((new FileWriter("F:\\joanna\\java\\workspace\\library\\textFiles\\catalogue.txt", false)));
-            this.catalogue.printToFile(writer);
+            while((currentBookLine = reader.readLine()) != null) {
+                Book newBook = this.createBookFromString(currentBookLine);
+                this.addBook(newBook);
+                final String[] info = currentBookLine.split(", ");
+                final int editionsNumber = Integer.parseInt(info[info.length - 1]);
+                for(int i = 0; i < editionsNumber; i++){
+                    newBook.addEditionFromString(reader.readLine());
+                }
+            }
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            throw new IOException("Error while reading file");
+        } finally {
+            tryCloseReader(reader);
+        }
+    }
+
+    private static void tryCloseReader(final BufferedReader reader) throws IOException {
+        try {
+            reader.close();
+        } catch (IOException e) {
+            throw new IOException("Error while reading file");
         }
     }
 }

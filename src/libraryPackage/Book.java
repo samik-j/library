@@ -10,19 +10,23 @@ public class Book {
     private String originalPublicationYear;
     private Set<Edition> editions;
 
-    public Book(int _id, String _title, String _author, String _originalPublicationYear) { // finals
+    public Book(final int _id, final String _title, final String _author, final String _originalPublicationYear) {
         this.id = _id;
         this.title = _title;
         this.author = _author;
         this.originalPublicationYear = _originalPublicationYear;
     }
 
-    public Book(String[] info) { // final maybe check lenght of array
-        this.id = Integer.parseInt(info[0]); // what if this throw
-        this.title = info[1];
-        this.author = info[2];
-        this.originalPublicationYear = info[3];
-        this.editions = new HashSet<>();
+    public Book(final String[] info) throws Exception {
+        try {
+            this.id = Integer.parseInt(info[0]);
+            this.title = info[1];
+            this.author = info[2];
+            this.originalPublicationYear = info[3];
+            this.editions = new HashSet<>();
+        } catch (Exception e) {
+            throw new Exception("Wrong information format");
+        }
     }
 
     public String getTitle() {
@@ -62,12 +66,7 @@ public class Book {
     }
 
     private Edition createEditionFromString(final String editionInformation) throws Exception {
-        try {
-            final String[] editionInfo = editionInformation.split(", ");
-            return new Edition(editionInfo);
-        } catch (Exception e) {
-            throw new Exception("Wrong information format");
-        }
+            return new Edition(editionInformation.split(", "));
     }
 
     private void addEdition(final Edition edition) throws ObjectDuplicationException {
