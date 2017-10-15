@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BookEditionTest {
-
+/*
     @Test
     public void compareIfSame() {
         BookEdition bookEdition1 = new BookEdition(new Book(1, "title", "author", "1000"), new Edition("123", "2020"));
@@ -37,4 +37,5 @@ class BookEditionTest {
         String expected = "1, title, author, 1000, 123, 2020, quantity: 0, borrowed: 0";
         assertEquals(expected, bookEdition1.toString());
     }
+    */
 }

@@ -15,6 +15,6 @@ public class BookEdition {
 
     @Override
     public String toString() {
-        return "" + book + ", " + edition;
+        return this.book.getBookInformation() + ", " + edition;
     }
 }

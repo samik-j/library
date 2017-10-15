@@ -32,13 +32,13 @@ public class Library {
     private int getAction() {
         System.out.println("" +
                 "1 PRINT CATALOGUE\n" +
-                "2 ADD BOOK ENTRY\n" +
+                //"2 ADD BOOK ENTRY\n" + //add book and editions
                 "3 ADD BOOK\n" +
                 "4 ADD EDITION\n" +
                 "5 SEARCH BOOK\n" +
                 "6 SEARCH EDITION\n" +
                 "7 BORROW\n" +
-                //add quantity? czy zrobic a add edition opcje add quantity?
+                "8 ADD QUANTITY\n" +
                 "0 EXIT");
         return input.nextInt();
     }
@@ -49,7 +49,7 @@ public class Library {
                 this.printCatalogue();
                 break;
             case 2:
-                this.addBookEntryToCatalogue();
+                //this.addBookEntryToCatalogue();
                 break;
             case 3:
                 this.addBookToCatalogue();
@@ -66,17 +66,19 @@ public class Library {
             case 7:
                 this.borrowBook();
                 break;
+            case 8:
+                this.addQuantityToCatalogue();
             default:
                 break;
         }
     }
 
     private void printCatalogue() {
-        for(Map.Entry<Integer, BookEntry> entry : catalogue.getAllIdAnBookQuantities().entrySet()) {
+        for(Map.Entry<Integer, Book> entry : catalogue.getAllIdAnBooks().entrySet()) {
             System.out.println(entry.getValue());
         }
     }
-
+/*
     private void addBookEntryToCatalogue() {
         System.out.println("id, title, author, originalPublicationDate, isbn, publicationDate");
         input.nextLine();
@@ -86,7 +88,7 @@ public class Library {
             System.out.println(e.getMessage());
         }
     }
-
+*/
     private void addBookToCatalogue() {
         System.out.println("id, title, author, originalPublicationDate");
         input.nextLine();
@@ -98,10 +100,12 @@ public class Library {
     }
 
     private void addEditionToCatalogue() {
-        System.out.println("id, isbn, publicationDate");
+        System.out.print("book id : ");
+        final int id = input.nextInt();
+        System.out.println("id, isbn, publicationDate | id, isbn, publicationDate, quantity, borrowed");
         input.nextLine();
         try {
-            this.catalogue.addEditionFromString(input.nextLine());
+            this.catalogue.addEditionFromStringToBook(id, input.nextLine());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -133,7 +137,7 @@ public class Library {
         System.out.println("id");
         final int id = input.nextInt();
         try {
-            System.out.println(this.catalogue.getBookEntryById(id));
+            System.out.println(this.catalogue.getBookById(id));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -145,11 +149,11 @@ public class Library {
         input.nextLine();
         final String title = input.nextLine();
         try {
-            Set<BookEntry> found = this.catalogue.getBookEntriesByTitle(title);
+            Set<Book> found = this.catalogue.getBookByTitle(title);
             if(found.isEmpty())
                 System.out.println("Title not found");
             else
-                this.printBookEntries(found);
+                this.printBooks(found);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -160,11 +164,11 @@ public class Library {
         input.nextLine();
         final String author = input.nextLine();
         try {
-            Set<BookEntry> found = this.catalogue.getBookEntriesByAuthor(author);
+            Set<Book> found = this.catalogue.getBookByAuthor(author);
             if(found.isEmpty())
                 System.out.println("Author not found");
             else
-                this.printBookEntries(found);
+                this.printBooks(found);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -182,20 +186,24 @@ public class Library {
     }
 
     private void borrowBook() {
-        System.out.println("id, isbn");
-        final int id = input.nextInt();
-        final String isbn = input.nextLine();
+        System.out.println("bookId.editionId");
+        input.nextLine();
+        final String id = input.nextLine();
         try {
-            this.catalogue.borrowBook(id, isbn);
+            this.catalogue.borrowBook(id);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
     }
 
-    private void printBookEntries(Set<BookEntry> bookEntries) {
-        for(BookEntry bookEntry : bookEntries)
-            System.out.println(bookEntry);
+    private void printBooks(Set<Book> books) {
+        for(Book book : books)
+            System.out.println(book);
+    }
+
+    private void addQuantityToCatalogue() {
+
     }
 
     private void readCatalogueFromFile() {

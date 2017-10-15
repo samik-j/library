@@ -12,9 +12,7 @@ public class BookEntry {
         this.editions = new HashSet<>();
     }
 
-    public void addEdition(final Edition edition) {
-        editions.add(edition);
-    }
+
 
     public Book getBook() {
         return this.book;

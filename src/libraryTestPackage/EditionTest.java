@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EditionTest {
-
+/*
     @Test
     public void addQuantity() {
         Edition edition = new Edition("123", "2000");
@@ -78,4 +78,5 @@ class EditionTest {
         String expected = "123, 2000, 0, 0";
         assertEquals(expected, edition1.print());
     }
+    */
 }
