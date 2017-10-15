@@ -74,7 +74,7 @@ public class UserInterface {
     }
 
     private void printCatalogue() {
-        for(Map.Entry<Integer, Book> entry : library.getAllIdAnBooks().entrySet()) {
+        for(Map.Entry<Integer, Book> entry : library.getCatalogue().entrySet()) {
             System.out.println(entry.getValue());
         }
     }
@@ -119,13 +119,13 @@ public class UserInterface {
             searchBy = input.next();
             switch(searchBy) {
                 case "id":
-                    this.searchCatalogueById();
+                    this.searchInCatalogueByBookId();
                     break;
                 case "title":
-                    this.searchCatalogueByTitle();
+                    this.searchInCatalogueByBookTitle();
                     break;
                 case "author":
-                    this.searchCatalogueByAuthor();
+                    this.searchInCatalogueByBookAuthor();
                     break;
                 default:
                     break;
@@ -133,45 +133,36 @@ public class UserInterface {
         } while(!searchOptions.contains(searchBy));
     }
 
-    private void searchCatalogueById() {
+    private void searchInCatalogueByBookId() {
         System.out.println("id");
         final int id = input.nextInt();
-        try {
-            System.out.println(this.library.getBookById(id));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
+        Book book = this.library.getBookById(id);
+        if(book != null)
+            System.out.println(book);
+        else
+            System.out.println("Book not found");
     }
 
-    private void searchCatalogueByTitle() {
+    private void searchInCatalogueByBookTitle() {
         System.out.println("title");
         input.nextLine();
         final String title = input.nextLine();
-        try {
-            Set<Book> found = this.library.getBookByTitle(title);
-            if(found.isEmpty())
-                System.out.println("Title not found");
-            else
+            Set<Book> found = this.library.getBooksByTitle(title);
+            if(!found.isEmpty())
                 this.printBooks(found);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+            else
+                System.out.println("Book not found");
     }
 
-    private void searchCatalogueByAuthor() {
+    private void searchInCatalogueByBookAuthor() {
         System.out.println("author");
         input.nextLine();
         final String author = input.nextLine();
-        try {
-            Set<Book> found = this.library.getBookByAuthor(author);
-            if(found.isEmpty())
-                System.out.println("Author not found");
-            else
+            Set<Book> found = this.library.getBooksByAuthor(author);
+            if(!found.isEmpty())
                 this.printBooks(found);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+            else
+                System.out.println("Book not found");
     }
 
     private void searchBookEditionInCatalogue() {
@@ -209,7 +200,7 @@ public class UserInterface {
 
     private void readCatalogueFromFile() {
         try {
-            this.library.readFromFile(getBufferedReaderForFile("library.txt"));
+            this.library.readFromFile(getBufferedReaderForFile("catalogue.txt"));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

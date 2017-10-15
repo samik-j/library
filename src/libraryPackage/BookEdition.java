@@ -15,6 +15,10 @@ public class BookEdition {
 
     @Override
     public String toString() {
-        return this.book.getBookInformation() + ", " + edition;
+        return "id " + this.book.getId() + "." + this.edition.getId() + " | " +
+                this.book.getTitle() + ", " + this.book.getAuthor() + ", " +
+                this.edition.getIsbn() + ", " + this.edition.getPublicationYear() +
+                ", quantity: " + this.edition.getQuantity() + ", borrowed: " +
+                this.edition.getBorrowed();
     }
 }
