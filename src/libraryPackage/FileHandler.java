@@ -8,16 +8,17 @@ public class FileHandler {
     private final static String catalogueFile = "F:\\joanna\\java\\workspace\\library\\textFiles\\catalogue.txt";
 
     public Map<Integer, Book> readCatalogue() throws Exception {
-        Map<Integer, Book> catalogue = new HashMap<>();
-        BufferedReader reader = getBufferedReaderForFile(catalogueFile);
-
+        final Map<Integer, Book> catalogue = new HashMap<>();
+        final BufferedReader reader = getBufferedReaderForFile(catalogueFile);
         String currentBookLine = "";
+
         try {
             while((currentBookLine = reader.readLine()) != null) {
                 final String[] info = currentBookLine.split(", ");
-                Book newBook = new Book(info);
-                catalogue.put(newBook.getId(), newBook);
+                final Book newBook = new Book(info);
                 final int editionsCount = Integer.parseInt(info[info.length - 1]);
+
+                catalogue.put(newBook.getId(), newBook);
                 for(int i = 0; i < editionsCount; ++i)
                     newBook.addEditionFromString(reader.readLine());
             }
@@ -31,9 +32,9 @@ public class FileHandler {
         return catalogue;
     }
 
-    public void saveCatalogue(Map<Integer, Book> catalogue) throws IOException {
+    public void saveCatalogue(final Map<Integer, Book> catalogue) throws IOException {
         try {
-            BufferedWriter writer = new BufferedWriter((new FileWriter(catalogueFile, true)));
+            final BufferedWriter writer = new BufferedWriter((new FileWriter(catalogueFile, true)));
 
             for (Book book : catalogue.values()) {
                 writer.write(book.print());

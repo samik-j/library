@@ -1,7 +1,7 @@
 package libraryPackage;
 
 public class Edition {
-    private int id;
+    private final int id;
     private final String isbn;
     private String publicationYear;
     private int quantity;

@@ -4,15 +4,15 @@ import java.io.IOException;
 import java.util.*;
 
 public class Library {
-    private Map<Integer, Book> catalogue;
-    private FileHandler fileHandler;
+    private final Map<Integer, Book> catalogue;
+    private final FileHandler fileHandler;
 
     public Library(FileHandler _fileHandler) throws Exception {
         this.fileHandler  = _fileHandler;
         this.catalogue = this.fileHandler.readCatalogue();
     }
 
-    public Map<Integer, Book> getCatalogue() { // wierd name
+    public Map<Integer, Book> getCatalogue() {
         return this.catalogue;
     }
 

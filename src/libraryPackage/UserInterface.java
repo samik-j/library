@@ -79,22 +79,12 @@ public class UserInterface {
         }
     }
 
-    private void printCatalogue() {
+    private void printCatalogue() { //PRZENIESC DO LIBRARY I TU TYLKO WOLAC
         for(Map.Entry<Integer, Book> entry : library.getCatalogue().entrySet()) {
             System.out.println(entry.getValue());
         }
     }
-/*
-    private void addBookEntryToCatalogue() {
-        System.out.println("id, title, author, originalPublicationDate, isbn, publicationDate");
-        input.nextLine();
-        try {
-            this.library.addBookEntryFromString(input.nextLine());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-*/
+
     private void addBookToCatalogue() {
         System.out.println("id, title, author, originalPublicationDate");
         input.nextLine();
