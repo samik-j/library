@@ -9,16 +9,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static com.sun.javaws.JnlpxArgs.verify;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 class LibraryTest {
-
     Library library;
     FileHandler fileHandler = mock(FileHandler.class);
 
@@ -38,6 +34,24 @@ class LibraryTest {
         library = new Library(fileHandler);
 
         assertEquals(1, library.getCatalogue().size());
+    }
+
+    @Test//nowy
+    public void testReadMembersWithEmptyFile() throws Exception {
+        when(fileHandler.readMembers()).thenReturn(new HashMap<>());
+        library = new Library(fileHandler);
+
+        assertTrue(library.getMembers().isEmpty());
+    }
+
+    @Test//nowy
+    public void testReadMembers() throws Exception {
+        Map<Integer, Person> members = new HashMap<>();
+        members.put(1, new Person(new String[]{"1", "name"}));
+        when(fileHandler.readMembers()).thenReturn(members);
+        library = new Library(fileHandler);
+
+        assertEquals(1, library.getMembers().size());
     }
 
     @Test
@@ -102,6 +116,7 @@ class LibraryTest {
         this.getLibrary();
         this.library.addBookFromString("1, title, author, 2000");
         this.library.addEditionFromStringToBook(1, "1, 123, 2020");
+
         Book expectedBook = new Book(new String[]{"1", "title", "author", "2000"});
         Edition expectedEdition = new Edition(new String[]{"1", "123", "2020"});
         expectedBook.getEditions().add(expectedEdition);
@@ -183,6 +198,35 @@ class LibraryTest {
     }
 
     @Test
+    public void addPresonFromStringIfPossible() throws Exception {
+        this.getLibrary();
+        this.library.addPersonFromString("1, name");
+
+        assertEquals(1, this.library.getMembers().size());
+    }
+
+    @Test
+    public void addPersonFromStrinfIfHasSuchIdThrowsObjectDuplicationException() throws Exception {
+        this.getLibrary();
+        this.library.addPersonFromString("1, name");
+
+        assertThrows(ObjectDuplicationException.class, () ->
+        {
+            this.library.addPersonFromString("1, name");
+        });
+    }
+
+    @Test
+    public void addPersonFromStringIfWrongInputThrowsException() throws Exception {
+        this.getLibrary();
+
+        assertThrows(Exception.class, () ->
+        {
+            this.library.addPersonFromString("a, name");
+        });
+    }
+
+    @Test
     public void borrowIfPossible() throws Exception {
         this.getLibrary();
         this.library.addBookFromString("1, title, author, 2000");
@@ -225,16 +269,18 @@ class LibraryTest {
         });
     }
 
-    @Test
-    public void saveCatalogue() throws Exception {
+    @Test//ten sie zmienil
+    public void saveLibrary() throws Exception {
         this.getLibrary();
-        this.library.saveCatalogue();
+        this.library.saveLibrary();
 
-        Mockito.verify(fileHandler, times(1)).saveCatalogue(this.library.getCatalogue());
+        verify(fileHandler, times(1)).saveCatalogue(this.library.getCatalogue());
+        verify(fileHandler, times(1)).saveMembers(this.library.getMembers());
     }
 
-    private void getLibrary() throws Exception {
+    private void getLibrary() throws Exception { //to sie zmienilo
         when(fileHandler.readCatalogue()).thenReturn(new HashMap<>());
+        when(fileHandler.readMembers()).thenReturn(new HashMap<>());
         library = new Library(fileHandler);
     }
 

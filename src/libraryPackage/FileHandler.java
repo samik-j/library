@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class FileHandler {
     private final static String catalogueFile = "F:\\joanna\\java\\workspace\\library\\textFiles\\catalogue.txt";
+    private final static String membersFile = "F:\\joanna\\java\\workspace\\library\\textFiles\\members.txt";
 
     public Map<Integer, Book> readCatalogue() throws Exception {
         final Map<Integer, Book> catalogue = new HashMap<>();
@@ -34,7 +35,7 @@ public class FileHandler {
 
     public void saveCatalogue(final Map<Integer, Book> catalogue) throws IOException {
         try {
-            final BufferedWriter writer = new BufferedWriter((new FileWriter(catalogueFile, true)));
+            final BufferedWriter writer = new BufferedWriter((new FileWriter(catalogueFile, false)));
 
             for (Book book : catalogue.values()) {
                 writer.write(book.print());
@@ -44,6 +45,42 @@ public class FileHandler {
                     writer.newLine();
                 }
             }
+            writer.close();
+        } catch (IOException e) {
+            throw new IOException("Error while writing to file");
+        }
+    }
+
+    public Map<Integer, Person> readMembers() throws Exception {
+        final Map<Integer, Person> members = new HashMap<>();
+        final BufferedReader reader = getBufferedReaderForFile(membersFile);
+        String currentLine = "";
+
+        try {
+            while ((currentLine = reader.readLine()) != null) {
+                String[] info = currentLine.split(", ");
+                Person person = new Person(info);
+
+                members.put(person.getId(), person);
+            }
+        } catch (IOException e) {
+            throw new IOException("Error while reading file");
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            tryCloseReader(reader);
+        }
+        return members;
+    }
+
+    public void saveMembers(Map<Integer, Person> members) throws IOException {
+        try {
+            final BufferedWriter writer = new BufferedWriter((new FileWriter(membersFile, false)));
+
+            for (Person person : members.values()) {
+                writer.write(person.print());
+                writer.newLine();
+                }
             writer.close();
         } catch (IOException e) {
             throw new IOException("Error while writing to file");

@@ -4,16 +4,22 @@ import java.io.IOException;
 import java.util.*;
 
 public class Library {
-    private final Map<Integer, Book> catalogue;
     private final FileHandler fileHandler;
+    private final Map<Integer, Book> catalogue;
+    private final Map<Integer, Person> members;
 
     public Library(FileHandler _fileHandler) throws Exception {
         this.fileHandler  = _fileHandler;
         this.catalogue = this.fileHandler.readCatalogue();
+        this.members = this.fileHandler.readMembers();
     }
 
     public Map<Integer, Book> getCatalogue() {
         return this.catalogue;
+    }
+
+    public Map<Integer, Person> getMembers() {
+        return this.members;
     }
 
     public Book getBookById(final int id) {
@@ -74,12 +80,41 @@ public class Library {
         this.getBookByIdThrowable(id).addEditionFromString(editionInformation);
     }
 
+    public void addPersonFromString(final String person) throws Exception {
+        this.addPerson(createPersonFromString(person));
+    }
+
+    private Person createPersonFromString(final String personInformation) throws Exception {
+        return new Person(personInformation.split(", "));
+    }
+
+    private void addPerson(final Person person) throws ObjectDuplicationException {
+        if(!this.members.containsKey(person.getId()))
+            this.members.put(person.getId(), person);
+        else
+            throw new ObjectDuplicationException("Id already exists");
+    }
+
     public void borrowBook(final int bookId, final int editionId) throws Exception {
         this.getBookByIdThrowable(bookId).borrow(editionId);
     }
 
-    public void saveCatalogue() throws IOException {
+    public void printCatalogue() {
+        for(Map.Entry<Integer, Book> entry : this.catalogue.entrySet()) {
+            System.out.println(entry.getValue());
+        }
+    }
+
+    public void saveLibrary() throws IOException {
+        this.saveCatalogue();
+        this.saveMembers();
+    }
+
+    private void saveCatalogue() throws IOException {
         this.fileHandler.saveCatalogue(this.catalogue);
     }
 
+    private void saveMembers() throws IOException {
+        this.fileHandler.saveMembers(this.members);
+    }
 }

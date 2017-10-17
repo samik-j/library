@@ -32,7 +32,7 @@ public class UserInterface {
             action = this.getAction();
             runAction(action);
         } while(action != 0);
-        this.printCatalogueToFile();
+        this.printLibraryToFile();
     }
 
     private int getAction() {
@@ -44,7 +44,8 @@ public class UserInterface {
                 "5 SEARCH BOOK\n" +
                 "6 SEARCH EDITION\n" +
                 "7 BORROW\n" +
-                "8 ADD QUANTITY\n" +
+                //"8 ADD QUANTITY\n" +
+                "9 ADD MEMBER\n" +
                 "0 EXIT");
         return input.nextInt();
     }
@@ -74,15 +75,17 @@ public class UserInterface {
                 break;
             case 8:
                 this.addQuantityToCatalogue();
+                break;
+            case 9:
+                this.addPersonToMembers();
+                break;
             default:
                 break;
         }
     }
 
-    private void printCatalogue() { //PRZENIESC DO LIBRARY I TU TYLKO WOLAC
-        for(Map.Entry<Integer, Book> entry : library.getCatalogue().entrySet()) {
-            System.out.println(entry.getValue());
-        }
+    private void printCatalogue() {
+        this.library.printCatalogue();
     }
 
     private void addBookToCatalogue() {
@@ -185,18 +188,28 @@ public class UserInterface {
 
     }
 
+    private void addQuantityToCatalogue() {
+
+    }
+
+    private void addPersonToMembers() {
+        System.out.println("id, name");
+        input.nextLine();
+        try {
+            this.library.addPersonFromString(input.nextLine());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     private void printBooks(Set<Book> books) {
         for(Book book : books)
             System.out.println(book);
     }
 
-    private void addQuantityToCatalogue() {
-
-    }
-
-    private void printCatalogueToFile() {
+    private void printLibraryToFile() {
         try {
-            this.library.saveCatalogue();
+            this.library.saveLibrary();
         } catch (IOException e) {
             System.out.println("Cannot save catalogue");
         }

@@ -2,7 +2,6 @@ package libraryTestPackage;
 
 import libraryPackage.Book;
 import libraryPackage.BookEdition;
-import libraryPackage.BookEntry;
 import libraryPackage.Edition;
 import org.junit.jupiter.api.Test;
 
