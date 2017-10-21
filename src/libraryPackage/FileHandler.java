@@ -51,8 +51,8 @@ public class FileHandler {
         }
     }
 
-    public Map<Integer, Person> readMembers() throws Exception {
-        final Map<Integer, Person> members = new HashMap<>();
+    public Map<Integer, Person> readUsers() throws Exception {
+        final Map<Integer, Person> users = new HashMap<>();
         final BufferedReader reader = getBufferedReaderForFile(membersFile);
         String currentLine = "";
 
@@ -61,7 +61,7 @@ public class FileHandler {
                 String[] info = currentLine.split(", ");
                 Person person = new Person(info);
 
-                members.put(person.getId(), person);
+                users.put(person.getId(), person);
             }
         } catch (IOException e) {
             throw new IOException("Error while reading file");
@@ -70,14 +70,14 @@ public class FileHandler {
         } finally {
             tryCloseReader(reader);
         }
-        return members;
+        return users;
     }
 
-    public void saveMembers(Map<Integer, Person> members) throws IOException {
+    public void saveUsers(Map<Integer, Person> users) throws IOException {
         try {
             final BufferedWriter writer = new BufferedWriter((new FileWriter(membersFile, false)));
 
-            for (Person person : members.values()) {
+            for (Person person : users.values()) {
                 writer.write(person.print());
                 writer.newLine();
                 }

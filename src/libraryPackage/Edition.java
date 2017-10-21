@@ -7,19 +7,19 @@ public class Edition {
     private int quantity;
     private int borrowed;
 
-    public Edition(final String[] editionInformation) throws Exception {
+    public Edition(final String[] info) throws Exception {
         try {
-            this.id = Integer.parseInt(editionInformation[0]);
-            this.isbn = editionInformation[1];
-            this.publicationYear = editionInformation[2];
+            this.id = Integer.parseInt(info[0]);
+            this.isbn = info[1];
+            this.publicationYear = info[2];
 
-            if (editionInformation.length == 3) {
+            if (info.length == 3) {
                 this.quantity = 0;
                 this.borrowed = 0;
             }
-            if (editionInformation.length == 5) {
-                this.quantity = Integer.parseInt(editionInformation[3]);
-                this.borrowed = Integer.parseInt(editionInformation[4]);
+            else if (info.length == 5) {
+                this.quantity = Integer.parseInt(info[3]);
+                this.borrowed = Integer.parseInt(info[4]);
             }
         } catch (Exception e) {
             throw new Exception("Wrong information format");

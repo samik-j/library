@@ -6,20 +6,20 @@ import java.util.*;
 public class Library {
     private final FileHandler fileHandler;
     private final Map<Integer, Book> catalogue;
-    private final Map<Integer, Person> members;
+    private final Map<Integer, Person> users;
 
     public Library(FileHandler _fileHandler) throws Exception {
         this.fileHandler  = _fileHandler;
         this.catalogue = this.fileHandler.readCatalogue();
-        this.members = this.fileHandler.readMembers();
+        this.users = this.fileHandler.readUsers();
     }
 
     public Map<Integer, Book> getCatalogue() {
         return this.catalogue;
     }
 
-    public Map<Integer, Person> getMembers() {
-        return this.members;
+    public Map<Integer, Person> getUsers() {
+        return this.users;
     }
 
     public Book getBookById(final int id) {
@@ -89,8 +89,8 @@ public class Library {
     }
 
     private void addPerson(final Person person) throws ObjectDuplicationException {
-        if(!this.members.containsKey(person.getId()))
-            this.members.put(person.getId(), person);
+        if(!this.users.containsKey(person.getId()))
+            this.users.put(person.getId(), person);
         else
             throw new ObjectDuplicationException("Id already exists");
     }
@@ -115,6 +115,6 @@ public class Library {
     }
 
     private void saveMembers() throws IOException {
-        this.fileHandler.saveMembers(this.members);
+        this.fileHandler.saveUsers(this.users);
     }
 }

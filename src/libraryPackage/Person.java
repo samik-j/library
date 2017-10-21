@@ -1,13 +1,17 @@
 package libraryPackage;
 
+import java.time.LocalDate;
+
 public class Person {
     private final int id;
     private String name;
+    private String signUpDate;
 
     public Person(String[] info) throws Exception {
         try {
             this.id = Integer.parseInt(info[0]);
             this.name = info[1];
+            this.signUpDate = info[2];
         } catch (Exception e) {
             throw new Exception("Wrong information format");
         }
@@ -21,12 +25,21 @@ public class Person {
         return this.name;
     }
 
+    public String getSignUpDate() {
+        return this.signUpDate;
+    }
+
     public String print() {
-        return "" + this.id + ", " + this.name;
+        return "" + this.id + ", " + this.name + ", " + this.signUpDate;
     }
 
     public boolean compare(Person other) {
-        return this.id == other.id && this.name.equals(other.name);
+        return this.id == other.id && this.name.equals(other.name) && this.signUpDate.equals(other.signUpDate);
+    }
+
+    @Override
+    public String toString() {
+        return "id " + this.id + " | " + this.name + ", " + this.signUpDate;
     }
 
     @Override

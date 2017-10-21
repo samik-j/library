@@ -1,6 +1,7 @@
 package libraryPackage;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.*;
 
 public class UserInterface {
@@ -45,7 +46,8 @@ public class UserInterface {
                 "6 SEARCH EDITION\n" +
                 "7 BORROW\n" +
                 //"8 ADD QUANTITY\n" +
-                "9 ADD MEMBER\n" +
+                "9 ADD USER\n" +
+                "10 PRINT USERS\n" +
                 "0 EXIT");
         return input.nextInt();
     }
@@ -77,7 +79,10 @@ public class UserInterface {
                 this.addQuantityToCatalogue();
                 break;
             case 9:
-                this.addPersonToMembers();
+                this.addUser();
+                break;
+            case 10:
+                this.printUsers();
                 break;
             default:
                 break;
@@ -192,14 +197,19 @@ public class UserInterface {
 
     }
 
-    private void addPersonToMembers() {
+    private void addUser() {
         System.out.println("id, name");
         input.nextLine();
         try {
-            this.library.addPersonFromString(input.nextLine());
+            this.library.addPersonFromString(input.nextLine() + ", " + LocalDate.now());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private void printUsers() {
+        for(Person person : this.library.getUsers().values())
+            System.out.println(person);
     }
 
     private void printBooks(Set<Book> books) {
